@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Eyes - GitHub Version</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="game-container">
+        <h1>🐍 Snake Eyes 🎲</h1>
+        <div id="info">Prêt à jouer ?</div>
+        
+        <div class="dice-container">
+            <img id="dice1" src="assets/dice-1.png" alt="Dé 1">
+            <img id="dice2" src="assets/dice-1.png" alt="Dé 2">
+        </div>
+        
+        <div id="currentScore"></div>
+        <div id="scoreboard"></div>
+        <div id="snakeEyes"></div>
+        
+        <div class="buttons">
+            <button id="rollBtn">Lancer (Entrée)</button>
+            <button id="resetBtn" disabled>Rejouer</button>
+            <button id="quitBtn">Quitter</button>
+        </div>
+    </div>
+
+    <div id="setupModal" class="modal">
+        <div class="modal-content">
+            <h2>Configuration</h2>
+            <div id="playerInputs"></div>
+            <button id="startBtn">Commencer</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
