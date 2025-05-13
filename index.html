@@ -1,29 +1,560 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Snake Eyes - Jeu de Dés</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Eyes - Le Jeu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .background {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            width: 800px;
+            max-width: 90%;
+            padding: 30px;
+            text-align: center;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .dice {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: transform 0.3s;
+        }
+
+        .dice:hover {
+            transform: scale(1.1);
+        }
+
+        .current-score {
+            font-size: 1.2em;
+            margin: 15px 0;
+            min-height: 30px;
+            font-weight: bold;
+        }
+
+        .scoreboard {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .snake-eyes {
+            color: #27ae60;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #quitButton {
+            background-color: #e74c3c;
+        }
+
+        #quitButton:hover {
+            background-color: #c0392b;
+        }
+
+        #replayButton {
+            background-color: #2ecc71;
+        }
+
+        #replayButton:hover {
+            background-color: #27ae60;
+        }
+
+        .setup-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .setup-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .setup-box h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .setup-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+
+        .setup-box input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .setup-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .player-input {
+            margin-bottom: 15px;
+        }
+
+        .player-input label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .dice-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .dice {
+                width: 80px;
+                height: 80px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+
+        /* Animation pour les dés qui roulent */
+        @keyframes roll {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .rolling {
+            animation: roll 0.5s linear infinite;
+        }
+    </style>
 </head>
 <body>
-  <h1>🎲 Snake Eyes</h1>
-
-  <div class="players">
-    <input type="text" id="player1Name" placeholder="Nom du Joueur 1">
-    <input type="text" id="player2Name" placeholder="Nom du Joueur 2">
-    <button onclick="startGame()">Commencer la partie</button>
-  </div>
-
-  <div id="game" style="display: none;">
-    <h2 id="currentPlayer"></h2>
-    <div class="dice-container">
-      <img id="dice1" src="" alt="Dé 1" width="100">
-      <img id="dice2" src="" alt="Dé 2" width="100">
+    <div class="background"></div>
+    
+    <div class="game-container">
+        <h1>🐍 Snake Eyes - Le Jeu 🎲</h1>
+        <div id="info" class="info-text">Bienvenue dans Snake Eyes</div>
+        
+        <div class="dice-container">
+            <div id="dice1" class="dice"></div>
+            <div id="dice2" class="dice"></div>
+        </div>
+        
+        <div id="currentScore" class="current-score"></div>
+        
+        <div class="scoreboard" id="scoreboard">
+            Scores :<br>
+            Aucun joueur pour l'instant
+        </div>
+        
+        <div id="snakeEyes" class="snake-eyes">Snake Eyes 👀 : Aucun pour l'instant</div>
+        
+        <div class="buttons-container">
+            <button id="rollButton">🎲 Lancer les dés (Entrée)</button>
+            <button id="replayButton" disabled>🔄 Rejouer</button>
+            <button id="quitButton">🚪 Quitter</button>
+        </div>
     </div>
-    <button onclick="lancerDes()">Lancer les dés</button>
-    <p id="message"></p>
-  </div>
+    
+    <div id="setupScreen" class="setup-screen">
+        <div class="setup-box">
+            <h2>Configuration du jeu</h2>
+            <div id="playerInputs">
+                <div class="player-input">
+                    <label for="playerCount">Nombre de joueurs (1-6):</label>
+                    <input type="number" id="playerCount" min="1" max="6" value="2">
+                </div>
+            </div>
+            <div class="setup-buttons">
+                <button id="startGame">Commencer la partie</button>
+            </div>
+        </div>
+    </div>
 
-  <script src="script.js"></script>
+    <script>
+        // Variables du jeu
+        const players = [];
+        const scores = {};
+        let currentPlayerIndex = 0;
+        let gameOver = false;
+        
+        // Éléments du DOM
+        const dice1 = document.getElementById('dice1');
+        const dice2 = document.getElementById('dice2');
+        const infoElement = document.getElementById('info');
+        const currentScoreElement = document.getElementById('currentScore');
+        const scoreboardElement = document.getElementById('scoreboard');
+        const snakeEyesElement = document.getElementById('snakeEyes');
+        const rollButton = document.getElementById('rollButton');
+        const replayButton = document.getElementById('replayButton');
+        const quitButton = document.getElementById('quitButton');
+        const setupScreen = document.getElementById('setupScreen');
+        const playerCountInput = document.getElementById('playerCount');
+        const startGameButton = document.getElementById('startGame');
+        const playerInputsContainer = document.getElementById('playerInputs');
+        
+        // Images des dés (base64 pour ne pas dépendre d'internet)
+        const diceImages = [
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjE4IiByPSIyIiBmaWxsPSIjMDAwIi8+PC9zdmc+',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjE4IiByPSIyIiBmaWxsPSIjMDAwIi8+PC9zdmc+',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSI2IiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTIiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxNiIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg=='
+        ];
+        
+        // Sons (utiliser des sons basiques si l'API Audio est supportée)
+        const sounds = {
+            roll: new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...'),
+            win: new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...')
+        };
+        
+        // Écouteurs d'événements
+        rollButton.addEventListener('click', rollDice);
+        replayButton.addEventListener('click', resetGame);
+        quitButton.addEventListener('click', quitGame);
+        document.addEventListener('keydown', handleKeyPress);
+        startGameButton.addEventListener('click', showPlayerNameInputs);
+        
+        // Initialisation
+        function init() {
+            // Désactiver les sons si l'API Audio n'est pas supportée
+            if (!window.AudioContext && !window.webkitAudioContext) {
+                console.log("Audio non supporté");
+                sounds.roll = { play: () => {} };
+                sounds.win = { play: () => {} };
+            }
+            
+            // Afficher l'écran de configuration
+            setupScreen.style.display = 'flex';
+        }
+        
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                if (!rollButton.disabled && setupScreen.style.display === 'none') {
+                    rollDice();
+                } else if (setupScreen.style.display === 'flex' && 
+                           document.getElementById('confirmPlayers')) {
+                    confirmPlayers();
+                }
+            }
+        }
+        
+        function showPlayerNameInputs() {
+            const playerCount = parseInt(playerCountInput.value);
+            
+            if (playerCount < 1 || playerCount > 6) {
+                alert('Veuillez entrer un nombre de joueurs entre 1 et 6');
+                return;
+            }
+            
+            playerInputsContainer.innerHTML = `
+                <div class="player-input">
+                    <label for="playerCount">Nombre de joueurs (1-6):</label>
+                    <input type="number" id="playerCount" min="1" max="6" value="${playerCount}">
+                </div>
+            `;
+            
+            for (let i = 0; i < playerCount; i++) {
+                playerInputsContainer.innerHTML += `
+                    <div class="player-input">
+                        <label for="player${i}">Joueur ${i + 1}:</label>
+                        <input type="text" id="player${i}" placeholder="Nom du joueur ${i + 1}" required>
+                    </div>
+                `;
+            }
+            
+            playerInputsContainer.innerHTML += `
+                <div class="setup-buttons">
+                    <button id="confirmPlayers">Confirmer les joueurs</button>
+                </div>
+            `;
+            
+            document.getElementById('confirmPlayers').addEventListener('click', confirmPlayers);
+        }
+        
+        function confirmPlayers() {
+            const playerCount = parseInt(playerCountInput.value);
+            players.length = 0;
+            
+            for (let i = 0; i < playerCount; i++) {
+                const playerName = document.getElementById(`player${i}`).value.trim();
+                if (!playerName) {
+                    alert(`Veuillez entrer un nom pour le joueur ${i + 1}`);
+                    return;
+                }
+                players.push(playerName);
+                scores[playerName] = 0;
+            }
+            
+            // Mélanger l'ordre des joueurs
+            shuffleArray(players);
+            
+            // Cacher l'écran de configuration
+            setupScreen.style.display = 'none';
+            
+            // Mettre à jour l'affichage
+            updateScoreboard();
+            startTurn();
+            
+            // Jouer un son de démarrage
+            try {
+                sounds.roll.play();
+            } catch (e) {
+                console.log("Impossible de jouer le son");
+            }
+        }
+        
+        function rollDice() {
+            if (gameOver) return;
+            
+            rollButton.disabled = true;
+            
+            // Animation des dés
+            dice1.classList.add('rolling');
+            dice2.classList.add('rolling');
+            
+            // Jouer le son de lancer de dés
+            try {
+                sounds.roll.play();
+            } catch (e) {
+                console.log("Impossible de jouer le son");
+            }
+            
+            const currentPlayer = players[currentPlayerIndex];
+            const diceValue1 = Math.floor(Math.random() * 6) + 1;
+            const diceValue2 = Math.floor(Math.random() * 6) + 1;
+            const sum = diceValue1 + diceValue2;
+            
+            setTimeout(() => {
+                // Arrêter l'animation et afficher les résultats
+                dice1.classList.remove('rolling');
+                dice2.classList.remove('rolling');
+                
+                dice1.style.backgroundImage = `url("${diceImages[diceValue1 - 1]}")`;
+                dice2.style.backgroundImage = `url("${diceImages[diceValue2 - 1]}")`;
+                
+                // Vérifier les conditions de victoire
+                if (diceValue1 === 1 && diceValue2 === 1) {
+                    currentScoreElement.textContent = `${currentPlayer} a obtenu SNAKE EYES (1 + 1) et gagne la partie !`;
+                    snakeEyesElement.textContent = `🐍 Snake Eyes 👀 : ${currentPlayer} a fait 1 + 1`;
+                    infoElement.textContent = "Partie terminée !";
+                    gameOver = true;
+                    replayButton.disabled = false;
+                    
+                    // Jouer le son de victoire
+                    try {
+                        sounds.win.play();
+                    } catch (e) {
+                        console.log("Impossible de jouer le son");
+                    }
+                    return;
+                } else if (sum === 7) {
+                    scores[currentPlayer]++;
+                    currentScoreElement.textContent = `${currentPlayer} a obtenu 7 → 1 point (Total: ${scores[currentPlayer]})`;
+                    
+                    if (scores[currentPlayer] >= 5) {
+                        infoElement.textContent = `${currentPlayer} a atteint 5 points et gagne la partie !`;
+                        gameOver = true;
+                        replayButton.disabled = false;
+                        
+                        // Jouer le son de victoire
+                        try {
+                            sounds.win.play();
+                        } catch (e) {
+                            console.log("Impossible de jouer le son");
+                        }
+                        return;
+                    }
+                } else {
+                    currentScoreElement.textContent = `${currentPlayer} a obtenu ${diceValue1} + ${diceValue2} = ${sum} → 0 point`;
+                }
+                
+                updateScoreboard();
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+                
+                setTimeout(startTurn, 1500);
+            }, 1000);
+        }
+        
+        function startTurn() {
+            if (gameOver) return;
+            
+            const currentPlayer = players[currentPlayerIndex];
+            infoElement.textContent = `Au tour de ${currentPlayer}`;
+            rollButton.disabled = false;
+        }
+        
+        function updateScoreboard() {
+            let scoreText = "Scores :<br>";
+            for (const player of players) {
+                scoreText += `${player.padEnd(15)} : ${scores[player]} point(s)<br>`;
+            }
+            scoreboardElement.innerHTML = scoreText;
+        }
+        
+        function resetGame() {
+            // Réinitialiser les variables
+            players.length = 0;
+            for (const key in scores) delete scores[key];
+            currentPlayerIndex = 0;
+            gameOver = false;
+            
+            // Réinitialiser l'affichage
+            dice1.style.backgroundImage = '';
+            dice2.style.backgroundImage = '';
+            currentScoreElement.textContent = '';
+            snakeEyesElement.textContent = 'Snake Eyes 👀 : Aucun pour l\'instant';
+            infoElement.textContent = 'Bienvenue dans Snake Eyes';
+            rollButton.disabled = false;
+            replayButton.disabled = true;
+            
+            // Afficher l'écran de configuration
+            setupScreen.style.display = 'flex';
+            playerInputsContainer.innerHTML = `
+                <div class="player-input">
+                    <label for="playerCount">Nombre de joueurs (1-6):</label>
+                    <input type="number" id="playerCount" min="1" max="6" value="2">
+                </div>
+                <div class="setup-buttons">
+                    <button id="startGame">Commencer la partie</button>
+                </div>
+            `;
+            
+            document.getElementById('startGame').addEventListener('click', showPlayerNameInputs);
+        }
+        
+        function quitGame() {
+            if (confirm('Voulez-vous vraiment quitter le jeu ?')) {
+                window.close();
+                // Alternative pour les navigateurs qui bloquent window.close()
+                document.body.innerHTML = '<h1 style="color:white;text-align:center;">Merci d\'avoir joué !</h1>';
+            }
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // Démarrer le jeu
+        init();
+    </script>
 </body>
 </html>
