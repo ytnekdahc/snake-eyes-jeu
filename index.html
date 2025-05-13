@@ -3,23 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Eyes Pro - Jeu de Dés avec Jetons</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Snake Eyes - Le Jeu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --accent: #fd79a8;
-            --dark: #2d3436;
-            --light: #f5f6fa;
-            --success: #00b894;
-            --danger: #d63031;
-        }
-        
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--dark);
-            color: var(--light);
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: white;
             margin: 0;
             padding: 0;
             display: flex;
@@ -27,238 +17,140 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
+            position: relative;
         }
-        
+
         .background {
             position: absolute;
             width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--primary), var(--secondary));
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
-            z-index: -2;
+            z-index: -1;
         }
-        
+
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        
+
         .game-container {
-            background-color: rgba(45, 52, 54, 0.9);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            width: 900px;
-            max-width: 95%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            width: 800px;
+            max-width: 90%;
             padding: 30px;
             text-align: center;
-            border: 2px solid var(--accent);
-            position: relative;
-            overflow: hidden;
+            color: #333;
         }
-        
-        .game-container::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: linear-gradient(45deg, var(--primary), var(--accent), var(--secondary));
-            z-index: -1;
-            border-radius: 25px;
-            opacity: 0.7;
-            animation: borderGlow 3s ease infinite;
-        }
-        
-        @keyframes borderGlow {
-            0% { filter: blur(5px); opacity: 0.5; }
-            50% { filter: blur(8px); opacity: 0.8; }
-            100% { filter: blur(5px); opacity: 0.5; }
-        }
-        
+
         h1 {
-            color: var(--light);
+            color: #2c3e50;
             margin-bottom: 20px;
-            font-size: 2.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            background: linear-gradient(to right, var(--accent), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
-        
-        .header-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .token-display {
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 10px 20px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            font-weight: bold;
-            border: 1px solid var(--accent);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .token-display span {
-            margin-left: 10px;
-            color: var(--accent);
-            font-size: 1.2rem;
-        }
-        
-        #buyTokensBtn {
-            background-color: var(--success);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            margin-left: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        #buyTokensBtn:hover {
-            transform: scale(1.1);
-            background-color: #00a884;
-        }
-        
+
         .dice-container {
             display: flex;
             justify-content: center;
-            gap: 50px;
-            margin: 40px 0;
-            position: relative;
+            gap: 30px;
+            margin: 30px 0;
         }
-        
+
         .dice {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             transition: transform 0.3s;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            position: relative;
-            overflow: hidden;
         }
-        
-        .dice::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0));
-            border-radius: 15px;
-        }
-        
+
         .dice:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            transform: scale(1.1);
         }
-        
+
         .current-score {
-            font-size: 1.3rem;
-            margin: 20px 0;
-            min-height: 40px;
+            font-size: 1.2em;
+            margin: 15px 0;
+            min-height: 30px;
             font-weight: bold;
-            color: var(--accent);
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
-        
+
         .scoreboard {
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 30px 0;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
             text-align: left;
             font-family: 'Courier New', monospace;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
         }
-        
+
         .snake-eyes {
-            color: var(--accent);
+            color: #27ae60;
             font-weight: bold;
-            margin: 15px 0;
-            font-size: 1.2rem;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            margin: 10px 0;
+            font-size: 1.1em;
         }
-        
+
         .buttons-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
-            margin-top: 30px;
+            margin-top: 20px;
         }
-        
+
         button {
-            background-color: var(--primary);
+            background-color: #3498db;
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            font-weight: bold;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        
+
         button:hover {
-            background-color: #5649d1;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        
+
         button:active {
             transform: translateY(0);
         }
-        
+
         button:disabled {
-            background-color: #636e72;
+            background-color: #95a5a6;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
-            opacity: 0.7;
         }
-        
+
         #quitButton {
-            background-color: var(--danger);
+            background-color: #e74c3c;
         }
-        
+
         #quitButton:hover {
             background-color: #c0392b;
         }
-        
+
         #replayButton {
-            background-color: var(--success);
+            background-color: #2ecc71;
         }
-        
+
         #replayButton:hover {
-            background-color: #00a884;
+            background-color: #27ae60;
         }
-        
-        .modal {
+
+        .setup-screen {
             position: fixed;
             top: 0;
             left: 0;
@@ -268,119 +160,85 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
+            z-index: 100;
         }
-        
-        .modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .modal-content {
-            background-color: var(--dark);
+
+        .setup-box {
+            background-color: white;
             padding: 30px;
-            border-radius: 20px;
+            border-radius: 10px;
             width: 400px;
             max-width: 90%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            border: 2px solid var(--accent);
-            transform: scale(0.9);
-            transition: transform 0.3s;
-            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        
-        .modal.active .modal-content {
-            transform: scale(1);
+
+        .setup-box h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            text-align: center;
         }
-        
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: var(--light);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .token-pack {
-            background-color: rgba(108, 92, 231, 0.2);
-            border: 1px solid var(--primary);
-            border-radius: 10px;
-            padding: 15px;
+
+        .setup-box input {
+            width: 100%;
+            padding: 12px;
             margin: 10px 0;
-            cursor: pointer;
-            transition: all 0.3s;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+
+        .setup-box input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .setup-buttons {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
         }
-        
-        .token-pack:hover {
-            background-color: rgba(108, 92, 231, 0.4);
-            transform: translateX(5px);
+
+        .player-input {
+            margin-bottom: 15px;
         }
-        
-        .token-pack .price {
-            color: var(--accent);
+
+        .player-input label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #2c3e50;
             font-weight: bold;
         }
-        
-        .token-pack .tokens {
-            font-weight: bold;
-            color: var(--success);
+
+        @media (max-width: 600px) {
+            .dice-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .dice {
+                width: 80px;
+                height: 80px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
         }
-        
-        .pulse {
-            animation: pulse 0.5s ease-in-out;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); color: var(--accent); }
-            100% { transform: scale(1); }
-        }
-        
-        .rolling {
-            animation: roll 0.5s linear infinite;
-        }
-        
+
+        /* Animation pour les dés qui roulent */
         @keyframes roll {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: var(--accent);
-            opacity: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .dice-container {
-                gap: 20px;
-            }
-            
-            .dice {
-                width: 90px;
-                height: 90px;
-            }
-            
-            button {
-                padding: 12px 24px;
-                font-size: 1rem;
-            }
-            
-            .header-info {
-                flex-direction: column;
-                gap: 10px;
-            }
+
+        .rolling {
+            animation: roll 0.5s linear infinite;
         }
     </style>
 </head>
@@ -388,15 +246,8 @@
     <div class="background"></div>
     
     <div class="game-container">
-        <div class="header-info">
-            <h1>🐍 SNAKE EYES PRO 🎲</h1>
-            <div class="token-display">
-                💰 Jetons: <span id="tokenCount">0</span>
-                <button id="buyTokensBtn">+</button>
-            </div>
-        </div>
-        
-        <div id="info" class="info-text">Chargement du jeu...</div>
+        <h1>🐍 Snake Eyes - Le Jeu 🎲</h1>
+        <div id="info" class="info-text">Bienvenue dans Snake Eyes</div>
         
         <div class="dice-container">
             <div id="dice1" class="dice"></div>
@@ -406,99 +257,40 @@
         <div id="currentScore" class="current-score"></div>
         
         <div class="scoreboard" id="scoreboard">
-            <h3>Statistiques</h3>
-            <div id="stats"></div>
+            Scores :<br>
+            Aucun joueur pour l'instant
         </div>
         
-        <div id="snakeEyes" class="snake-eyes">Snake Eyes 👀 : En attente...</div>
+        <div id="snakeEyes" class="snake-eyes">Snake Eyes 👀 : Aucun pour l'instant</div>
         
         <div class="buttons-container">
-            <button id="rollButton">🎲 Lancer les dés (50 jetons)</button>
-            <button id="replayButton" disabled>🔄 Nouvelle partie</button>
+            <button id="rollButton">🎲 Lancer les dés (Entrée)</button>
+            <button id="replayButton" disabled>🔄 Rejouer</button>
             <button id="quitButton">🚪 Quitter</button>
         </div>
     </div>
     
-    <!-- Modal pour la boutique de jetons -->
-    <div id="tokenShopModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal">&times;</button>
-            <h2>Boutique de Jetons</h2>
-            <p>Jetons disponibles: <strong id="currentTokensModal">0</strong></p>
-            
-            <div id="tokenPacksContainer">
-                <!-- Rempli dynamiquement par JavaScript -->
-            </div>
-            
-            <p class="disclaimer">* Les achats sont simulés pour cette démonstration</p>
-        </div>
-    </div>
-    
-    <!-- Modal pour le setup du jeu -->
-    <div id="setupModal" class="modal">
-        <div class="modal-content">
-            <h2>Configuration du Jeu</h2>
+    <div id="setupScreen" class="setup-screen">
+        <div class="setup-box">
+            <h2>Configuration du jeu</h2>
             <div id="playerInputs">
-                <div class="input-group">
-                    <label for="playerName">Votre pseudo:</label>
-                    <input type="text" id="playerName" placeholder="Entrez votre nom" required>
+                <div class="player-input">
+                    <label for="playerCount">Nombre de joueurs (1-6):</label>
+                    <input type="number" id="playerCount" min="1" max="6" value="2">
                 </div>
             </div>
-            <button id="startGameBtn">Commencer à jouer</button>
+            <div class="setup-buttons">
+                <button id="startGame">Commencer la partie</button>
+            </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
-    
     <script>
-        // Configuration Firebase - REMPLACEZ par vos propres infos
-        const firebaseConfig = {
-            apiKey: "AIzaSyDummyAPIKeyDontUseThis123",
-            authDomain: "your-project-id.firebaseapp.com",
-            databaseURL: "https://your-project-id.firebaseio.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project-id.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890abcdef"
-        };
-
-        // Initialisation Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const auth = firebase.auth();
-        
         // Variables du jeu
-        let playerTokens = 0;
-        let playerName = "Joueur";
-        let currentUserId = null;
-        let gameStats = {
-            rolls: 0,
-            wins: 0,
-            snakeEyes: 0,
-            totalWon: 0
-        };
-        
-        // Images des dés en base64
-        const diceImages = [
-            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
-            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjE4IiByPSIyIiBmaWxsPSIjMDAwIi8+PC9zdmc+',
-            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
-            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjE4IiByPSIyIiBmaWxsPSIjMDAwIi8+PC9zdmc+',
-            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSI2IiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
-            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTIiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxNiIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg=='
-        ];
-        
-        // Packs de jetons disponibles
-        const tokenPacks = [
-            { tokens: 1000, price: 0.99, bonus: 0 },
-            { tokens: 2500, price: 1.99, bonus: 100 },
-            { tokens: 5000, price: 3.99, bonus: 500 },
-            { tokens: 10000, price: 6.99, bonus: 1500 },
-            { tokens: 25000, price: 12.99, bonus: 5000 }
-        ];
+        const players = [];
+        const scores = {};
+        let currentPlayerIndex = 0;
+        let gameOver = false;
         
         // Éléments du DOM
         const dice1 = document.getElementById('dice1');
@@ -510,150 +302,145 @@
         const rollButton = document.getElementById('rollButton');
         const replayButton = document.getElementById('replayButton');
         const quitButton = document.getElementById('quitButton');
-        const tokenCountElement = document.getElementById('tokenCount');
-        const buyTokensBtn = document.getElementById('buyTokensBtn');
-        const tokenShopModal = document.getElementById('tokenShopModal');
-        const setupModal = document.getElementById('setupModal');
-        const startGameBtn = document.getElementById('startGameBtn');
-        const playerNameInput = document.getElementById('playerName');
-        const tokenPacksContainer = document.getElementById('tokenPacksContainer');
-        const currentTokensModal = document.getElementById('currentTokensModal');
-        const statsElement = document.getElementById('stats');
+        const setupScreen = document.getElementById('setupScreen');
+        const playerCountInput = document.getElementById('playerCount');
+        const startGameButton = document.getElementById('startGame');
+        const playerInputsContainer = document.getElementById('playerInputs');
         
-        // Initialisation du jeu
-        function initGame() {
-            setupEventListeners();
-            showSetupModal();
+        // Images des dés (base64 pour ne pas dépendre d'internet)
+        const diceImages = [
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjE4IiByPSIyIiBmaWxsPSIjMDAwIi8+PC9zdmc+',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjE4IiByPSIyIiBmaWxsPSIjMDAwIi8+PC9zdmc+',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSI2IiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==',
+            'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNiIgY3k9IjgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTIiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTYiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjgiIHI9IjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMDAwIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIxNiIgcj0iMiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg=='
+        ];
+        
+        // Sons (utiliser des sons basiques si l'API Audio est supportée)
+        const sounds = {
+            roll: new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...'),
+            win: new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...')
+        };
+        
+        // Écouteurs d'événements
+        rollButton.addEventListener('click', rollDice);
+        replayButton.addEventListener('click', resetGame);
+        quitButton.addEventListener('click', quitGame);
+        document.addEventListener('keydown', handleKeyPress);
+        startGameButton.addEventListener('click', showPlayerNameInputs);
+        
+        // Initialisation
+        function init() {
+            // Désactiver les sons si l'API Audio n'est pas supportée
+            if (!window.AudioContext && !window.webkitAudioContext) {
+                console.log("Audio non supporté");
+                sounds.roll = { play: () => {} };
+                sounds.win = { play: () => {} };
+            }
+            
+            // Afficher l'écran de configuration
+            setupScreen.style.display = 'flex';
         }
         
-        // Configuration des écouteurs d'événements
-        function setupEventListeners() {
-            rollButton.addEventListener('click', rollDice);
-            replayButton.addEventListener('click', resetGame);
-            quitButton.addEventListener('click', quitGame);
-            buyTokensBtn.addEventListener('click', showTokenShop);
-            
-            // Boutique de jetons
-            document.querySelector('.close-modal').addEventListener('click', hideTokenShop);
-            
-            // Configuration du jeu
-            startGameBtn.addEventListener('click', startGame);
-            
-            // Touche Entrée pour lancer les dés
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !rollButton.disabled) {
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                if (!rollButton.disabled && setupScreen.style.display === 'none') {
                     rollDice();
+                } else if (setupScreen.style.display === 'flex' && 
+                           document.getElementById('confirmPlayers')) {
+                    confirmPlayers();
                 }
-            });
+            }
         }
         
-        // Afficher le modal de configuration
-        function showSetupModal() {
-            setupModal.classList.add('active');
-        }
-        
-        // Démarrer le jeu après configuration
-        function startGame() {
-            const name = playerNameInput.value.trim();
-            if (!name) {
-                alert("Veuillez entrer un nom de joueur");
+        function showPlayerNameInputs() {
+            const playerCount = parseInt(playerCountInput.value);
+            
+            if (playerCount < 1 || playerCount > 6) {
+                alert('Veuillez entrer un nombre de joueurs entre 1 et 6');
                 return;
             }
             
-            playerName = name;
-            setupModal.classList.remove('active');
+            playerInputsContainer.innerHTML = `
+                <div class="player-input">
+                    <label for="playerCount">Nombre de joueurs (1-6):</label>
+                    <input type="number" id="playerCount" min="1" max="6" value="${playerCount}">
+                </div>
+            `;
             
-            // Connexion anonyme Firebase
-            auth.signInAnonymously()
-                .then((userCredential) => {
-                    currentUserId = userCredential.user.uid;
-                    loadPlayerData();
-                })
-                .catch((error) => {
-                    console.error("Erreur de connexion Firebase:", error);
-                    // Fallback local si Firebase échoue
-                    currentUserId = "local_" + Math.random().toString(36).substring(2, 15);
-                    playerTokens = 1000;
-                    updateUI();
-                    infoElement.textContent = `Bienvenue, ${playerName}! Commencez à jouer!`;
-                });
+            for (let i = 0; i < playerCount; i++) {
+                playerInputsContainer.innerHTML += `
+                    <div class="player-input">
+                        <label for="player${i}">Joueur ${i + 1}:</label>
+                        <input type="text" id="player${i}" placeholder="Nom du joueur ${i + 1}" required>
+                    </div>
+                `;
+            }
+            
+            playerInputsContainer.innerHTML += `
+                <div class="setup-buttons">
+                    <button id="confirmPlayers">Confirmer les joueurs</button>
+                </div>
+            `;
+            
+            document.getElementById('confirmPlayers').addEventListener('click', confirmPlayers);
         }
         
-        // Charger les données du joueur depuis Firebase
-        function loadPlayerData() {
-            db.ref('players/' + currentUserId).once('value')
-                .then((snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        playerTokens = data.tokens || 1000;
-                        gameStats = data.stats || gameStats;
-                        playerName = data.name || playerName;
-                    } else {
-                        // Nouveau joueur
-                        playerTokens = 1000;
-                        savePlayerData();
-                    }
-                    updateUI();
-                    infoElement.textContent = `Bienvenue, ${playerName}! Commencez à jouer!`;
-                })
-                .catch((error) => {
-                    console.error("Erreur de lecture des données:", error);
-                    playerTokens = 1000;
-                    updateUI();
-                    infoElement.textContent = `Bienvenue, ${playerName}! Commencez à jouer!`;
-                });
+        function confirmPlayers() {
+            const playerCount = parseInt(playerCountInput.value);
+            players.length = 0;
+            
+            for (let i = 0; i < playerCount; i++) {
+                const playerName = document.getElementById(`player${i}`).value.trim();
+                if (!playerName) {
+                    alert(`Veuillez entrer un nom pour le joueur ${i + 1}`);
+                    return;
+                }
+                players.push(playerName);
+                scores[playerName] = 0;
+            }
+            
+            // Mélanger l'ordre des joueurs
+            shuffleArray(players);
+            
+            // Cacher l'écran de configuration
+            setupScreen.style.display = 'none';
+            
+            // Mettre à jour l'affichage
+            updateScoreboard();
+            startTurn();
+            
+            // Jouer un son de démarrage
+            try {
+                sounds.roll.play();
+            } catch (e) {
+                console.log("Impossible de jouer le son");
+            }
         }
         
-        // Sauvegarder les données du joueur dans Firebase
-        function savePlayerData() {
-            if (!currentUserId) return;
-            
-            const playerData = {
-                name: playerName,
-                tokens: playerTokens,
-                stats: gameStats,
-                lastPlayed: new Date().toISOString()
-            };
-            
-            db.ref('players/' + currentUserId).set(playerData)
-                .catch((error) => {
-                    console.error("Erreur de sauvegarde:", error);
-                    // Sauvegarde locale en fallback
-                    localStorage.setItem('snakeEyesPlayerData', JSON.stringify({
-                        tokens: playerTokens,
-                        stats: gameStats
-                    }));
-                });
-        }
-        
-        // Lancer les dés
         function rollDice() {
-            if (playerTokens < 50) {
-                infoElement.textContent = "Pas assez de jetons! Achetez-en plus.";
-                showTokenShop();
-                return;
-            }
+            if (gameOver) return;
             
-            // Déduire les jetons
-            playerTokens -= 50;
-            gameStats.rolls++;
-            updateUI();
-            savePlayerData();
-            
-            // Désactiver le bouton pendant le lancer
             rollButton.disabled = true;
             
             // Animation des dés
             dice1.classList.add('rolling');
             dice2.classList.add('rolling');
             
-            // Simuler un délai pour le lancer
+            // Jouer le son de lancer de dés
+            try {
+                sounds.roll.play();
+            } catch (e) {
+                console.log("Impossible de jouer le son");
+            }
+            
+            const currentPlayer = players[currentPlayerIndex];
+            const diceValue1 = Math.floor(Math.random() * 6) + 1;
+            const diceValue2 = Math.floor(Math.random() * 6) + 1;
+            const sum = diceValue1 + diceValue2;
+            
             setTimeout(() => {
-                // Générer des résultats aléatoires
-                const diceValue1 = Math.floor(Math.random() * 6) + 1;
-                const diceValue2 = Math.floor(Math.random() * 6) + 1;
-                const sum = diceValue1 + diceValue2;
-                
                 // Arrêter l'animation et afficher les résultats
                 dice1.classList.remove('rolling');
                 dice2.classList.remove('rolling');
@@ -661,170 +448,113 @@
                 dice1.style.backgroundImage = `url("${diceImages[diceValue1 - 1]}")`;
                 dice2.style.backgroundImage = `url("${diceImages[diceValue2 - 1]}")`;
                 
-                // Vérifier les résultats
+                // Vérifier les conditions de victoire
                 if (diceValue1 === 1 && diceValue2 === 1) {
-                    // Snake Eyes - Gros gain!
-                    const winAmount = 1000;
-                    playerTokens += winAmount;
-                    gameStats.snakeEyes++;
-                    gameStats.totalWon += winAmount;
-                    gameStats.wins++;
+                    currentScoreElement.textContent = `${currentPlayer} a obtenu SNAKE EYES (1 + 1) et gagne la partie !`;
+                    snakeEyesElement.textContent = `🐍 Snake Eyes 👀 : ${currentPlayer} a fait 1 + 1`;
+                    infoElement.textContent = "Partie terminée !";
+                    gameOver = true;
+                    replayButton.disabled = false;
                     
-                    currentScoreElement.textContent = `SNAKE EYES! 🎉 Vous gagnez ${winAmount} jetons!`;
-                    snakeEyesElement.textContent = `🐍 Snake Eyes 👀 : ${playerName} a fait 1 + 1`;
-                    infoElement.textContent = "Félicitations! Vous avez gagné le jackpot!";
-                    
-                    // Animation de victoire
-                    createConfetti();
+                    // Jouer le son de victoire
+                    try {
+                        sounds.win.play();
+                    } catch (e) {
+                        console.log("Impossible de jouer le son");
+                    }
+                    return;
                 } else if (sum === 7) {
-                    // Gain normal
-                    const winAmount = 100;
-                    playerTokens += winAmount;
-                    gameStats.totalWon += winAmount;
-                    gameStats.wins++;
+                    scores[currentPlayer]++;
+                    currentScoreElement.textContent = `${currentPlayer} a obtenu 7 → 1 point (Total: ${scores[currentPlayer]})`;
                     
-                    currentScoreElement.textContent = `7! Vous gagnez ${winAmount} jetons!`;
+                    if (scores[currentPlayer] >= 5) {
+                        infoElement.textContent = `${currentPlayer} a atteint 5 points et gagne la partie !`;
+                        gameOver = true;
+                        replayButton.disabled = false;
+                        
+                        // Jouer le son de victoire
+                        try {
+                            sounds.win.play();
+                        } catch (e) {
+                            console.log("Impossible de jouer le son");
+                        }
+                        return;
+                    }
                 } else {
-                    // Pas de gain
-                    currentScoreElement.textContent = `${diceValue1} + ${diceValue2} = ${sum} - Pas de gain cette fois`;
+                    currentScoreElement.textContent = `${currentPlayer} a obtenu ${diceValue1} + ${diceValue2} = ${sum} → 0 point`;
                 }
                 
-                // Mettre à jour l'interface et sauvegarder
-                updateUI();
-                savePlayerData();
+                updateScoreboard();
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
                 
-                // Réactiver le bouton après un court délai
-                setTimeout(() => {
-                    if (playerTokens >= 50) {
-                        rollButton.disabled = false;
-                        infoElement.textContent = `À vous de jouer, ${playerName}!`;
-                    } else {
-                        infoElement.textContent = `Plus assez de jetons, ${playerName}. Achetez-en plus!`;
-                    }
-                }, 1500);
-                
+                setTimeout(startTurn, 1500);
             }, 1000);
         }
         
-        // Afficher la boutique de jetons
-        function showTokenShop() {
-            currentTokensModal.textContent = playerTokens;
+        function startTurn() {
+            if (gameOver) return;
             
-            // Générer les packs de jetons
-            tokenPacksContainer.innerHTML = tokenPacks.map(pack => `
-                <div class="token-pack" data-tokens="${pack.tokens}">
-                    <span class="tokens">${pack.tokens + pack.bonus} jetons</span>
-                    <span class="price">${pack.price.toFixed(2)}$</span>
-                    ${pack.bonus > 0 ? `<small>+${pack.bonus} bonus!</small>` : ''}
-                </div>
-            `).join('');
-            
-            // Ajouter les écouteurs d'événements
-            document.querySelectorAll('.token-pack').forEach(pack => {
-                pack.addEventListener('click', () => {
-                    const tokens = parseInt(pack.dataset.tokens);
-                    const bonus = tokenPacks.find(p => p.tokens === tokens).bonus;
-                    buyTokenPack(tokens + bonus);
-                });
-            });
-            
-            tokenShopModal.classList.add('active');
+            const currentPlayer = players[currentPlayerIndex];
+            infoElement.textContent = `Au tour de ${currentPlayer}`;
+            rollButton.disabled = false;
         }
         
-        // Cacher la boutique de jetons
-        function hideTokenShop() {
-            tokenShopModal.classList.remove('active');
+        function updateScoreboard() {
+            let scoreText = "Scores :<br>";
+            for (const player of players) {
+                scoreText += `${player.padEnd(15)} : ${scores[player]} point(s)<br>`;
+            }
+            scoreboardElement.innerHTML = scoreText;
         }
         
-        // Acheter un pack de jetons (simulé)
-        function buyTokenPack(tokens) {
-            // Dans une vraie application, vous auriez ici un appel à votre système de paiement
-            playerTokens += tokens;
-            updateUI();
-            savePlayerData();
-            
-            // Feedback visuel
-            tokenCountElement.classList.add('pulse');
-            setTimeout(() => tokenCountElement.classList.remove('pulse'), 500);
-            
-            // Mettre à jour l'affichage dans le modal
-            currentTokensModal.textContent = playerTokens;
-            
-            // Message de confirmation
-            alert(`Achat réussi! ${tokens} jetons ont été ajoutés à votre compte.`);
-        }
-        
-        // Réinitialiser le jeu
         function resetGame() {
+            // Réinitialiser les variables
+            players.length = 0;
+            for (const key in scores) delete scores[key];
+            currentPlayerIndex = 0;
+            gameOver = false;
+            
+            // Réinitialiser l'affichage
             dice1.style.backgroundImage = '';
             dice2.style.backgroundImage = '';
             currentScoreElement.textContent = '';
-            snakeEyesElement.textContent = 'Snake Eyes 👀 : En attente...';
+            snakeEyesElement.textContent = 'Snake Eyes 👀 : Aucun pour l\'instant';
+            infoElement.textContent = 'Bienvenue dans Snake Eyes';
             rollButton.disabled = false;
             replayButton.disabled = true;
             
-            // Recharger les données pour s'assurer qu'elles sont à jour
-            loadPlayerData();
+            // Afficher l'écran de configuration
+            setupScreen.style.display = 'flex';
+            playerInputsContainer.innerHTML = `
+                <div class="player-input">
+                    <label for="playerCount">Nombre de joueurs (1-6):</label>
+                    <input type="number" id="playerCount" min="1" max="6" value="2">
+                </div>
+                <div class="setup-buttons">
+                    <button id="startGame">Commencer la partie</button>
+                </div>
+            `;
+            
+            document.getElementById('startGame').addEventListener('click', showPlayerNameInputs);
         }
         
-        // Quitter le jeu
         function quitGame() {
             if (confirm('Voulez-vous vraiment quitter le jeu ?')) {
-                // Dans une vraie application, vous pourriez vouloir sauvegarder avant de quitter
                 window.close();
+                // Alternative pour les navigateurs qui bloquent window.close()
+                document.body.innerHTML = '<h1 style="color:white;text-align:center;">Merci d\'avoir joué !</h1>';
             }
         }
         
-        // Mettre à jour l'interface utilisateur
-        function updateUI() {
-            tokenCountElement.textContent = playerTokens;
-            
-            // Mettre à jour les statistiques
-            statsElement.innerHTML = `
-                <p>Lancers: ${gameStats.rolls}</p>
-                <p>Victoires: ${gameStats.wins}</p>
-                <p>Snake Eyes: ${gameStats.snakeEyes}</p>
-                <p>Jetons gagnés: ${gameStats.totalWon}</p>
-            `;
-            
-            // Activer/désactiver les boutons selon les jetons disponibles
-            rollButton.disabled = playerTokens < 50;
-        }
-        
-        // Créer un effet de confetti
-        function createConfetti() {
-            const colors = ['#6c5ce7', '#a29bfe', '#fd79a8', '#00b894', '#fdcb6e'];
-            
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.top = -10 + 'px';
-                confetti.style.opacity = '1';
-                
-                document.body.appendChild(confetti);
-                
-                // Animation
-                const animationDuration = Math.random() * 3 + 2;
-                confetti.style.transition = `all ${animationDuration}s ease-out`;
-                
-                setTimeout(() => {
-                    confetti.style.top = '100%';
-                    confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.opacity = '0';
-                    confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
-                }, 10);
-                
-                // Supprimer après l'animation
-                setTimeout(() => {
-                    confetti.remove();
-                }, animationDuration * 1000);
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
         }
         
         // Démarrer le jeu
-        initGame();
+        init();
     </script>
 </body>
 </html>
