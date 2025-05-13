@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const buyTokensButton = document.getElementById("buyTokensButton");
   const closeModal = document.getElementById("closeModal");
 
-  let tokens = 5;
+  let tokens = 1000; // Tu démarres avec 1000 jetons
   let points = 0;
 
   function updateDisplays() {
@@ -22,11 +22,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function rollDice() {
-    if (tokens <= 0) {
-      result.textContent = "Tu n’as plus de jetons ! 😢";
+    if (tokens < 5) {
+      result.textContent = "Tu n’as pas assez de jetons pour jouer.";
       showBuyTokensModal();
       return;
     }
+
+    tokens -= 5; // Chaque lancer coûte 5 jetons
 
     const d1 = rollDie();
     const d2 = rollDie();
@@ -36,20 +38,21 @@ document.addEventListener("DOMContentLoaded", function () {
     dice2.textContent = d2;
 
     if (d1 === 1 && d2 === 1) {
-      result.textContent = "🐍 Double 1 ! Victoire immédiate ! 🎉";
-      points += 10; // on peut récompenser plus ici
-    } else if (sum === 7) {
-      result.textContent = `🎯 Tu as un 7 ! Tu gagnes 1 point.`;
+      result.textContent = "🐍 Double 1 ! Tu gagnes 50 jetons !";
+      tokens += 50;
       points += 1;
-      tokens--; // tu perds 1 jeton même si tu gagnes 1 point ?
+    } else if (sum === 7) {
+      result.textContent = `🎯 Tu as fait 7 ! Tu gagnes 10 jetons !`;
+      tokens += 10;
+      points += 1;
     } else {
-      result.textContent = `Tu as fait ${d1} + ${d2} = ${sum}. Pas de point.`;
-      tokens--;
+      result.textContent = `Tu as fait ${d1} + ${d2} = ${sum}. Tu gagnes quand même 1 jeton !`;
+      tokens += 1;
     }
 
     updateDisplays();
 
-    if (tokens <= 0) {
+    if (tokens < 5) {
       showBuyTokensModal();
     }
   }
@@ -65,10 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
   rollButton.addEventListener("click", rollDice);
 
   buyTokensButton.addEventListener("click", () => {
-    tokens += 5;
+    tokens += 100;
     updateDisplays();
     hideBuyTokensModal();
-    result.textContent = "Tu as racheté des jetons ! 🎲";
+    result.textContent = "Tu as racheté 100 jetons.";
   });
 
   closeModal.addEventListener("click", hideBuyTokensModal);
@@ -79,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Init
+  // Initialisation
   updateDisplays();
   dice1.textContent = "-";
   dice2.textContent = "-";
