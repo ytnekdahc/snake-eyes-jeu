@@ -1,50 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Eyes - Le Jeu</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Snake Eyes - Jeu de Dés</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background"></div>
+  <h1>🎲 Snake Eyes</h1>
 
-    <div class="game-container">
-        <h1>🐍 Snake Eyes - Le Jeu 🎲</h1>
-        <div id="info" class="info-text">Bienvenue dans Snake Eyes</div>
-        
-        <div class="dice-container">
-            <div id="dice1" class="dice"></div>
-            <div id="dice2" class="dice"></div>
-        </div>
-        
-        <div id="currentScore" class="current-score"></div>
-        <div class="scoreboard" id="scoreboard">Scores :<br>Aucun joueur pour l'instant</div>
-        <div id="snakeEyes" class="snake-eyes">Snake Eyes 👀 : Aucun pour l'instant</div>
-        
-        <div class="buttons-container">
-            <button id="rollButton">🎲 Lancer les dés (Entrée)</button>
-            <button id="replayButton" disabled>🔄 Rejouer</button>
-            <button id="quitButton">🚪 Quitter</button>
-        </div>
+  <div class="players">
+    <input type="text" id="player1Name" placeholder="Nom du Joueur 1">
+    <input type="text" id="player2Name" placeholder="Nom du Joueur 2">
+    <button onclick="startGame()">Commencer la partie</button>
+  </div>
+
+  <div id="game" style="display: none;">
+    <h2 id="currentPlayer"></h2>
+    <div class="dice-container">
+      <img id="dice1" src="" alt="Dé 1" width="100">
+      <img id="dice2" src="" alt="Dé 2" width="100">
     </div>
+    <button onclick="lancerDes()">Lancer les dés</button>
+    <p id="message"></p>
+  </div>
 
-    <div id="setupScreen" class="setup-screen">
-        <div class="setup-box">
-            <h2>Configuration du jeu</h2>
-            <div id="playerInputs">
-                <div class="player-input">
-                    <label for="playerCount">Nombre de joueurs (1-6):</label>
-                    <input type="number" id="playerCount" min="1" max="6" value="2">
-                </div>
-            </div>
-            <div class="setup-buttons">
-                <button id="startGame">Commencer la partie</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="dice-images.js"></script>
-    <script src="game.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
